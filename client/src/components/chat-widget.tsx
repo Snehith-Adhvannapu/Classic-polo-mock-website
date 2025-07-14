@@ -91,9 +91,23 @@ export default function ChatWidget() {
       const data = await response.json();
       console.log('Response data:', data);
       
+      let botResponseText = 'Sorry, I did not understand that.';
+      
+      // Handle different response formats
+      if (data.reply) {
+        botResponseText = data.reply;
+      } else if (data.response) {
+        botResponseText = data.response;
+      } else if (data.message && data.message !== 'Workflow was started') {
+        botResponseText = data.message;
+      } else if (data.message === 'Workflow was started') {
+        // Handle the specific case where n8n returns this message
+        botResponseText = 'I received your message and I\'m processing it. Let me help you with information about our products!\n\nWe have a great selection of classic polo shirts for Men, Women, and Kids, plus accessories. What specifically are you looking for?';
+      }
+      
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: data.reply || data.message || data.response || 'Sorry, I did not understand that.',
+        text: botResponseText,
         sender: 'bot',
         timestamp: new Date()
       };
