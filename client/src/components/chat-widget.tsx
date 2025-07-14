@@ -98,6 +98,11 @@ export default function ChatWidget() {
         botResponseText = data.reply;
       } else if (data.response) {
         botResponseText = data.response;
+      } else if (data.output && data.output !== '=') {
+        botResponseText = data.output;
+      } else if (data.output === '=') {
+        // Handle the case where n8n returns just "=" - likely a Google Sheets connection issue
+        botResponseText = 'I\'m having trouble accessing our product database right now. Here\'s what I can tell you about our products:\n\n• **Men\'s Collection**: Classic polo shirts in navy, white, black, and more\n• **Women\'s Collection**: Elegant polo styles and outfits\n• **Kids Collection**: Comfortable polos for children\n• **Accessories**: Belts, bags, and more\n\nWould you like to browse our products directly on the website?';
       } else if (data.message && data.message !== 'Workflow was started') {
         botResponseText = data.message;
       } else if (data.message === 'Workflow was started') {
@@ -125,6 +130,8 @@ export default function ChatWidget() {
           errorText = 'Chat service is currently offline. Please contact support or try again later.';
         } else if (error.message.includes('webhook') && error.message.includes('not registered')) {
           errorText = 'Chat service is being configured. Please try again in a few minutes.';
+        } else if (error.message.includes('500')) {
+          errorText = 'Our chat service is experiencing technical difficulties. Please browse our products directly or try again in a few minutes.';
         } else {
           errorText = `Chat service error: ${error.message}`;
         }
