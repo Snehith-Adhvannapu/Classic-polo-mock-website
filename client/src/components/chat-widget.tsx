@@ -60,7 +60,9 @@ export default function ChatWidget() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
+        mode: 'cors',
         body: JSON.stringify({
           message: inputMessage
         })
@@ -70,7 +72,20 @@ export default function ChatWidget() {
       console.log('Response headers:', response.headers);
 
       if (!response.ok) {
-        throw new Error(`Failed to send message: ${response.status} ${response.statusText}`);
+        // Try to get error details from response
+        let errorMessage = `Failed to send message: ${response.status} ${response.statusText}`;
+        try {
+          const errorData = await response.json();
+          if (errorData.message) {
+            errorMessage = errorData.message;
+            if (errorData.hint) {
+              errorMessage += ` ${errorData.hint}`;
+            }
+          }
+        } catch (e) {
+          // Ignore JSON parsing errors, use default message
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
@@ -92,7 +107,13 @@ export default function ChatWidget() {
       if (error instanceof TypeError && error.message.includes('fetch')) {
         errorText = 'Unable to connect to the chat service. Please check your internet connection.';
       } else if (error instanceof Error) {
-        errorText = `Chat service error: ${error.message}`;
+        if (error.message.includes('workflow must be active')) {
+          errorText = 'Chat service is currently offline. Please contact support or try again later.';
+        } else if (error.message.includes('webhook') && error.message.includes('not registered')) {
+          errorText = 'Chat service is being configured. Please try again in a few minutes.';
+        } else {
+          errorText = `Chat service error: ${error.message}`;
+        }
       }
       
       const errorMessage: Message = {
