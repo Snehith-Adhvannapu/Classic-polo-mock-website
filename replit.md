@@ -4,6 +4,11 @@
 
 This is a full-stack e-commerce application for "Classic Polo" - a clothing store specializing in timeless polo shirts and curated outfits. The application is built with a modern tech stack using React for the frontend, Express.js for the backend, and PostgreSQL with Drizzle ORM for data management.
 
+**Recent Updates (July 14, 2025):**
+- Successfully migrated from Replit Agent to standard Replit environment
+- Updated chat widget to connect to custom webhook API at `https://havocsnehith.app.n8n.cloud/webhook/chatbot`
+- Enhanced error handling and debugging for chat functionality
+
 **Key Features:**
 - **Scrape-Friendly Design**: Complete SEO optimization with structured data, meta tags, and schema markup
 - **CSV Export**: Direct download of all product data including name, price, links, and specifications

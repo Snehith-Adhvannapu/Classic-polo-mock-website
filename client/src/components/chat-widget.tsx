@@ -54,6 +54,8 @@ export default function ChatWidget() {
     setIsLoading(true);
 
     try {
+      console.log('Sending message to webhook:', inputMessage);
+      
       const response = await fetch('https://havocsnehith.app.n8n.cloud/webhook/chatbot', {
         method: 'POST',
         headers: {
@@ -64,15 +66,19 @@ export default function ChatWidget() {
         })
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+
       if (!response.ok) {
-        throw new Error('Failed to send message');
+        throw new Error(`Failed to send message: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
+      console.log('Response data:', data);
       
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: data.reply || 'Sorry, I did not understand that.',
+        text: data.reply || data.message || data.response || 'Sorry, I did not understand that.',
         sender: 'bot',
         timestamp: new Date()
       };
@@ -80,9 +86,18 @@ export default function ChatWidget() {
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
       console.error('Chat error:', error);
+      
+      let errorText = 'Sorry, I am having trouble connecting right now. Please try again later.';
+      
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        errorText = 'Unable to connect to the chat service. Please check your internet connection.';
+      } else if (error instanceof Error) {
+        errorText = `Chat service error: ${error.message}`;
+      }
+      
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'Sorry, I am having trouble connecting right now. Please try again later.',
+        text: errorText,
         sender: 'bot',
         timestamp: new Date()
       };
