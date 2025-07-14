@@ -1,0 +1,161 @@
+Site name: Classic Polo
+Tagline: “Timeless polos & curated outfits”
+Currency: INR
+
+1. Site Structure
+Homepage: rotating promotional banners
+
+Shop by Category: Men, Women, Kids, Accessories
+
+Product listing pages: with filters for size, color, fabric, fit, price, in‑stock
+
+Product detail pages: show images, size guide, stock status, price, description
+
+Cart & Checkout: standard ecommerce flow
+
+2. Product Catalog (60 items: 15 per category)
+🧑 Men (15 items)
+Navy Piqué Polo – ₹1,499, sizes S‑XL, colors navy/white/gray, fabric pique, classic fit
+
+Images:
+
+https://example.com/images/men/navy‑polo‑front.jpg
+
+https://example.com/images/men/navy‑polo‑back.jpg
+
+White Jersey Polo – ₹1,299, S‑XL, slim fit (new)
+
+Gray Striped Polo – limited, S‑L
+
+Black Performance Polo – ₹1,599
+
+Green Tech‑Dry Polo – ₹1,699
+
+Burgundy Rugby Polo – ₹1,799
+
+Yellow Golf Polo – ₹1,549
+
+Maroon Long‑Sleeve Polo – ₹1,899
+
+Olive Piqué Polo – ₹1,499
+
+Sky Blue Piqué Polo – ₹1,499
+
+Red Striped Polo – ₹1,599
+
+Beige Summer Polo – ₹1,449
+
+Charcoal Slim Polo – ₹1,599
+
+Coral Sport Polo – ₹1,649
+
+Teal Mesh Polo – ₹1,699
+
+Each with unique image links using flat‑lay/lifestyle mockups from Freepik, Placeit, Zippypixels (no duplicates).
+
+👩 Women (15 items)
+Pink Tech‑Piqué Polo – XS‑L
+
+White Slim Polo – ₹1,299
+
+Lavender Piqué Polo – ₹1,499
+… (11 more unique women’s polos, hoodies, leggings)
+
+Navy Hoodie – ₹1,999
+
+Gray Crop Hoodie – ₹1,899
+
+Black Leggings – ₹1,699
+
+Maroon Hoodie – ₹1,999
+
+Give each a unique image: flat‑lay, on‑model, front/back mockups.
+
+👶 Kids (15 items)
+Bright playful polos:
+
+Kids Red Polo – ₹799
+
+Kids Blue Striped Polo – ₹849
+…plus hoodies/shorts. Each unique names and images.
+
+🎒 Accessories (15 items)
+Blue Cap – ₹499
+
+Red Belt – ₹699
+
+Gray Socks – ₹299
+…and hats, belts, socks — 15 unique SKUs with flat‑lay mockups.
+
+3. Product Details
+Provide for each product:
+
+ID/SKU, name, category/sub‑category
+
+Price in INR
+
+Size options
+
+Colors
+
+Fabric (pique, jersey, tech, mesh)
+
+Fit (classic/slim/long‑sleeve)
+
+Inventory by size
+
+Two distinct image URLs
+
+Tags: best_seller, new_arrival, limited, performance
+
+4. Mockup & Image Sources
+Use public mockup links from:
+
+Free Front/Back Polo PSD → supports flat‑lay front/back 
+Etsy
++4
+Graphic Design Resources
++4
+ZippyPixels
++4
+FormatJSONOnline
+Placeit
++3
+ZippyPixels
++3
+ZippyPixels
++3
+GitHub
++1
+DummyJSON
++1
+Mockup World
++1
+Mockup Space
++1
+CUSTOM EPISODE
++4
+PsFiles
++4
+TemplateOcean
++4
+
+Placeit flat‑lay and on-model polo mockups 
+Etsy
+
+Zippypixels PSD mockups 
+ZippyPixels
++3
+ZippyPixels
++3
+The Free Mockup
++3
+
+Ensure no repeated images.
+
+5. Backend Data for Automation
+Structure the site’s HTML/data so each product page has semantic elements: SKU, price, sizes, colors, stock
+
+Create a sitemap or JSON‑feed endpoint with all product data—ideal for scraper, n8n automation
+
+Use a dummy‑product API (DummyJSON or FakeStoreAPI) to simulate real backend product and order
