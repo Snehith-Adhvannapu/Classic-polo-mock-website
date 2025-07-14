@@ -145,6 +145,101 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // CSV download route
+  app.get("/api/products/export/csv", async (req, res) => {
+    try {
+      const products = await storage.getAllProducts();
+      
+      // Create CSV headers
+      const headers = [
+        'ID', 'SKU', 'Name', 'Description', 'Category', 'Subcategory', 
+        'Price', 'Original Price', 'Fabric', 'Fit', 'Colors', 'Sizes', 
+        'Images', 'Tags', 'In Stock', 'Stock Count', 'Product Link'
+      ];
+      
+      // Create CSV rows
+      const rows = products.map(product => [
+        product.id,
+        product.sku,
+        `"${product.name}"`,
+        `"${product.description || ''}"`,
+        product.category,
+        product.subcategory || '',
+        product.price,
+        product.originalPrice || '',
+        product.fabric || '',
+        product.fit || '',
+        `"${product.colors?.join(', ') || ''}"`,
+        `"${product.sizes?.join(', ') || ''}"`,
+        `"${product.images?.join(', ') || ''}"`,
+        `"${product.tags?.join(', ') || ''}"`,
+        product.inStock ? 'Yes' : 'No',
+        product.stockCount || 0,
+        `"${req.protocol}://${req.get('host')}/product/${product.id}"`
+      ]);
+      
+      // Combine headers and rows
+      const csvContent = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
+      
+      // Set response headers for CSV download
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="classic_polo_products.csv"');
+      res.send(csvContent);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to export products" });
+    }
+  });
+
+  // Sitemap route for SEO
+  app.get("/sitemap.xml", async (req, res) => {
+    try {
+      const products = await storage.getAllProducts();
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
+      
+      const urls = [
+        { url: baseUrl, changefreq: 'daily', priority: '1.0' },
+        { url: `${baseUrl}/products`, changefreq: 'daily', priority: '0.9' },
+        { url: `${baseUrl}/all-products`, changefreq: 'daily', priority: '0.9' },
+        { url: `${baseUrl}/products/Men`, changefreq: 'weekly', priority: '0.8' },
+        { url: `${baseUrl}/products/Women`, changefreq: 'weekly', priority: '0.8' },
+        { url: `${baseUrl}/products/Kids`, changefreq: 'weekly', priority: '0.8' },
+        { url: `${baseUrl}/products/Accessories`, changefreq: 'weekly', priority: '0.8' },
+        ...products.map(product => ({
+          url: `${baseUrl}/product/${product.id}`,
+          changefreq: 'weekly',
+          priority: '0.7'
+        }))
+      ];
+      
+      const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(({ url, changefreq, priority }) => `  <url>
+    <loc>${url}</loc>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
+  </url>`).join('\n')}
+</urlset>`;
+      
+      res.setHeader('Content-Type', 'application/xml');
+      res.send(sitemap);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to generate sitemap" });
+    }
+  });
+
+  // Robots.txt for SEO
+  app.get("/robots.txt", (req, res) => {
+    const robotsTxt = `User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
+    
+    res.setHeader('Content-Type', 'text/plain');
+    res.send(robotsTxt);
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -7,6 +7,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Products from "@/pages/products";
 import ProductDetail from "@/pages/product-detail";
+import AllProducts from "@/pages/all-products";
 
 // Create a new QueryClient instance
 const queryClient = new QueryClient({
@@ -41,6 +42,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/products" component={Products} />
       <Route path="/products/:category" component={Products} />
+      <Route path="/all-products" component={AllProducts} />
       <Route path="/product/:id" component={ProductDetail} />
       <Route component={NotFound} />
     </Switch>

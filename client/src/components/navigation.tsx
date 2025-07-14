@@ -18,6 +18,7 @@ export default function Navigation() {
     { name: "Women", href: "/products/Women" },
     { name: "Kids", href: "/products/Kids" },
     { name: "Accessories", href: "/products/Accessories" },
+    { name: "All Products", href: "/all-products" },
   ];
 
   const handleSearch = (e: React.FormEvent) => {

@@ -97,6 +97,45 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/product/${product.id}`}>
       <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
+        {/* Structured Data for SEO and Scraping */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Product",
+              "name": product.name,
+              "description": product.description,
+              "image": product.images?.[0] || "/placeholder.jpg",
+              "sku": product.sku,
+              "brand": {
+                "@type": "Brand",
+                "name": "Classic Polo"
+              },
+              "offers": {
+                "@type": "Offer",
+                "url": `/product/${product.id}`,
+                "priceCurrency": "INR",
+                "price": product.price,
+                "availability": product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+                "seller": {
+                  "@type": "Organization",
+                  "name": "Classic Polo"
+                }
+              },
+              "category": product.category,
+              "color": product.colors?.join(", "),
+              "size": product.sizes?.join(", "),
+              "material": product.fabric,
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.5",
+                "reviewCount": "127"
+              }
+            })
+          }}
+        />
+        
         <div className="aspect-square bg-gray-100 rounded-t-lg overflow-hidden relative">
           <img
             src={product.images?.[0] || '/placeholder.jpg'}

@@ -4,6 +4,13 @@
 
 This is a full-stack e-commerce application for "Classic Polo" - a clothing store specializing in timeless polo shirts and curated outfits. The application is built with a modern tech stack using React for the frontend, Express.js for the backend, and PostgreSQL with Drizzle ORM for data management.
 
+**Key Features:**
+- **Scrape-Friendly Design**: Complete SEO optimization with structured data, meta tags, and schema markup
+- **CSV Export**: Direct download of all product data including name, price, links, and specifications
+- **60+ Products**: Comprehensive catalog across Men, Women, Kids, and Accessories categories
+- **Advanced Filtering**: Price, size, color, category, and stock filters
+- **Complete Shopping Cart**: Add/remove/update functionality with session management
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -51,10 +58,13 @@ Preferred communication style: Simple, everyday language.
 ### API Endpoints
 - `GET /api/products` - Retrieve all products with optional filtering
 - `GET /api/products/:id` - Get specific product details
+- `GET /api/products/export/csv` - Download complete product catalog as CSV
 - `GET /api/cart` - Retrieve cart items for session
 - `POST /api/cart` - Add item to cart
 - `PATCH /api/cart/:id` - Update cart item quantity
 - `DELETE /api/cart/:id` - Remove item from cart
+- `GET /sitemap.xml` - SEO sitemap for search engines and crawlers
+- `GET /robots.txt` - Robots file for web crawlers
 
 ## Data Flow
 
@@ -115,3 +125,37 @@ Preferred communication style: Simple, everyday language.
 - Environment-based configuration for different deployment stages
 
 The application uses a monorepo structure with shared TypeScript definitions between frontend and backend, ensuring type safety across the entire stack. The architecture supports both development and production environments with appropriate tooling and build processes for each.
+
+## Scraping and Data Export Features
+
+### SEO and Structured Data
+- **Complete Meta Tags**: Title, description, keywords, and Open Graph tags on all pages
+- **Schema.org Markup**: Product schema, organization schema, and review schema
+- **Microdata**: Additional semantic markup for enhanced scraping
+- **Sitemap Generation**: Dynamic XML sitemap with all products and categories
+- **Robots.txt**: Proper crawler directives and sitemap reference
+
+### Data Export Capabilities
+- **CSV Export**: Complete product catalog with all fields available via `/api/products/export/csv`
+- **Structured JSON**: All product data accessible via REST API endpoints
+- **Individual Product Pages**: Each product has dedicated URL with full metadata
+- **Category Pages**: Organized product listings by category with structured data
+
+### Scraping-Friendly URLs
+- `/` - Homepage with featured products
+- `/products` - All products with filtering
+- `/products/{category}` - Category-specific products (Men, Women, Kids, Accessories)
+- `/all-products` - Complete product catalog page
+- `/product/{id}` - Individual product detail pages
+- `/sitemap.xml` - Complete site structure
+- `/robots.txt` - Crawler guidelines
+
+### CSV Export Fields
+The CSV export includes comprehensive product data:
+- ID, SKU, Name, Description
+- Category, Subcategory, Price, Original Price
+- Fabric, Fit, Available Colors, Available Sizes
+- Product Images, Tags, Stock Status
+- Direct product links for easy access
+
+This makes the site perfect for tools like Firecrawl, Scrapy, or any web scraping solution that needs structured e-commerce data.

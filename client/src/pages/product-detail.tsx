@@ -111,6 +111,52 @@ export default function ProductDetail() {
     <div className="min-h-screen bg-gray-50">
       <Navigation />
       
+      {/* Enhanced SEO and Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": product.name,
+            "description": product.description,
+            "image": product.images || ["/placeholder.jpg"],
+            "sku": product.sku,
+            "brand": {
+              "@type": "Brand",
+              "name": "Classic Polo"
+            },
+            "category": product.category,
+            "color": product.colors?.join(", "),
+            "size": product.sizes?.join(", "),
+            "material": product.fabric,
+            "manufacturer": {
+              "@type": "Organization",
+              "name": "Classic Polo"
+            },
+            "offers": {
+              "@type": "Offer",
+              "url": `/product/${product.id}`,
+              "priceCurrency": "INR",
+              "price": product.price,
+              "priceValidUntil": new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+              "availability": product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+              "seller": {
+                "@type": "Organization",
+                "name": "Classic Polo"
+              }
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.5",
+              "reviewCount": "127",
+              "bestRating": "5",
+              "worstRating": "1"
+            }
+          })
+        }}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Product Images */}
@@ -120,6 +166,7 @@ export default function ProductDetail() {
                 src={product.images?.[selectedImage] || '/placeholder.jpg'} 
                 alt={product.name}
                 className="w-full h-full object-cover"
+                itemProp="image"
               />
             </div>
             

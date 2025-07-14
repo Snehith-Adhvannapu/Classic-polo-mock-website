@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Facebook, Twitter, Instagram, Youtube, ArrowRight } from "lucide-react";
+import { Facebook, Twitter, Instagram, Youtube, ArrowRight, Download } from "lucide-react";
 
 export default function Footer() {
   const handleNewsletterSubmit = (e: React.FormEvent) => {
@@ -117,7 +117,7 @@ export default function Footer() {
             <p className="text-gray-300 mb-4">
               Subscribe for updates, exclusive offers, and style tips.
             </p>
-            <form onSubmit={handleNewsletterSubmit} className="flex space-x-2">
+            <form onSubmit={handleNewsletterSubmit} className="flex space-x-2 mb-4">
               <Input
                 type="email"
                 placeholder="Your email"
@@ -132,6 +132,21 @@ export default function Footer() {
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </form>
+            
+            {/* CSV Download Button */}
+            <div className="mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+                onClick={() => {
+                  window.open('/api/products/export/csv', '_blank');
+                }}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Download Products CSV
+              </Button>
+            </div>
           </div>
         </div>
 
