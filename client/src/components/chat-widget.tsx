@@ -54,7 +54,7 @@ export default function ChatWidget() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://havocsnehith.app.n8n.cloud/webhook-test/chatbot', {
+      const response = await fetch('https://havocsnehith.app.n8n.cloud/webhook/chatbot', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
