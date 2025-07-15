@@ -16,7 +16,7 @@ export default function N8nChat() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Hello! I can help you find products from our catalog. What are you looking for?',
+      text: 'Hello! I can help you find products from our Classic Polo catalog. Ask me about polo shirts, categories, or specific items!',
       isUser: false,
       timestamp: new Date()
     }
@@ -86,6 +86,14 @@ export default function N8nChat() {
             botResponseText = data.reply;
           }
         }
+      }
+
+      // Check if the response is generic/not using Google Sheets data
+      if (botResponseText.includes("I'm ready") || 
+          botResponseText.includes("Please provide") || 
+          botResponseText.includes("Let's get started") ||
+          botResponseText.includes("I will follow these steps")) {
+        botResponseText = "Your n8n workflow isn't accessing Google Sheets data properly. The workflow needs to:\n\n1. Read your Google Sheets product catalog\n2. Search for products based on user input\n3. Return actual product data\n\nPlease check your n8n workflow configuration and make sure the Google Sheets node is connected and executing.";
       }
 
       const botMessage: Message = {
