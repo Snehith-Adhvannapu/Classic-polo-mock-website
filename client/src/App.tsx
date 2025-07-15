@@ -8,6 +8,7 @@ import Home from "@/pages/home";
 import Products from "@/pages/products";
 import ProductDetail from "@/pages/product-detail";
 import AllProducts from "@/pages/all-products";
+import N8nChat from "@/components/n8n-chat";
 
 
 // Create a new QueryClient instance
@@ -58,6 +59,7 @@ function AppContent() {
       <CartContext.Provider value={cartProvider}>
         <Toaster />
         <Router />
+        <N8nChat />
       </CartContext.Provider>
     </TooltipProvider>
   );
