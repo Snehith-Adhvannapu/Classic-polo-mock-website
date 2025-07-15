@@ -57,7 +57,34 @@
       import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
       createChat({
-        webhookUrl: 'https://havocsnehith.app.n8n.cloud/webhook/chatbot'
+        webhookUrl: 'https://havocsnehith.app.n8n.cloud/webhook/chatbot',
+        responseParser: (response) => {
+          console.log('Raw n8n response:', response);
+          
+          // Handle the malformed response structure from your n8n workflow
+          if (response && typeof response === 'object') {
+            // Check for the nested structure: {"{ "message": "" }": { "output": "actual response" }}
+            const keys = Object.keys(response);
+            for (const key of keys) {
+              if (response[key] && typeof response[key] === 'object' && response[key].output) {
+                return { message: response[key].output };
+              }
+            }
+            
+            // Standard response formats
+            if (response.message) {
+              return { message: response.message };
+            }
+            if (response.output) {
+              return { message: response.output };
+            }
+            if (response.reply) {
+              return { message: response.reply };
+            }
+          }
+          
+          return { message: 'No response received from chat service.' };
+        }
       });
     </script>
     <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
