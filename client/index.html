@@ -52,39 +52,54 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     
-    <!-- n8n Chat Widget -->
+    <!-- n8n Chat Widget with Response Interceptor -->
     <script type="module">
       import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
-      createChat({
-        webhookUrl: 'https://havocsnehith.app.n8n.cloud/webhook/chatbot',
-        responseParser: (response) => {
-          console.log('Raw n8n response:', response);
-          
-          // Handle the malformed response structure from your n8n workflow
-          if (response && typeof response === 'object') {
-            // Check for the nested structure: {"{ "message": "" }": { "output": "actual response" }}
-            const keys = Object.keys(response);
-            for (const key of keys) {
-              if (response[key] && typeof response[key] === 'object' && response[key].output) {
-                return { message: response[key].output };
+      // Override fetch to intercept and fix n8n responses
+      const originalFetch = window.fetch;
+      window.fetch = async function(...args) {
+        const response = await originalFetch.apply(this, args);
+        
+        // Only intercept our webhook calls
+        if (args[0] && args[0].includes('havocsnehith.app.n8n.cloud/webhook/chatbot')) {
+          const originalJson = response.json;
+          response.json = async function() {
+            const data = await originalJson.call(this);
+            console.log('Raw n8n response:', data);
+            
+            // Handle the malformed response structure from your n8n workflow
+            if (data && typeof data === 'object') {
+              // Check for the nested structure: {"{ "message": "" }": { "output": "actual response" }}
+              const keys = Object.keys(data);
+              for (const key of keys) {
+                if (data[key] && typeof data[key] === 'object' && data[key].output) {
+                  console.log('Fixed response:', data[key].output);
+                  return { message: data[key].output };
+                }
+              }
+              
+              // Standard response formats
+              if (data.message && data.message !== 'Workflow was started') {
+                return { message: data.message };
+              }
+              if (data.output) {
+                return { message: data.output };
+              }
+              if (data.reply) {
+                return { message: data.reply };
               }
             }
             
-            // Standard response formats
-            if (response.message) {
-              return { message: response.message };
-            }
-            if (response.output) {
-              return { message: response.output };
-            }
-            if (response.reply) {
-              return { message: response.reply };
-            }
-          }
-          
-          return { message: 'No response received from chat service.' };
+            return { message: 'No response received from chat service.' };
+          };
         }
+        
+        return response;
+      };
+
+      createChat({
+        webhookUrl: 'https://havocsnehith.app.n8n.cloud/webhook/chatbot'
       });
     </script>
     <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
