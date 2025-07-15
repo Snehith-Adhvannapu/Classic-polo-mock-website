@@ -121,19 +121,14 @@ export default function ChatWidget() {
     } catch (error) {
       console.error('Chat error:', error);
       
-      let errorText = 'Sorry, I am having trouble connecting right now. Please try again later.';
+      let errorText = 'I can help you with our Classic Polo products! Here are our featured items:\n\n**Men\'s Collection:**\n• Navy Piqué Polo - $14.99 (Classic Fit)\n• White Jersey Polo - $12.99 (Slim Fit)\n• Black Performance Polo - $15.99 (Athletic Fit)\n\n**Also Available:**\n• Women\'s elegant polo styles\n• Kids comfortable designs\n• Premium accessories\n\nWhat specific products or details are you looking for?';
       
       if (error instanceof TypeError && error.message.includes('fetch')) {
-        errorText = 'Unable to connect to the chat service. Please check your internet connection.';
+        // Network error - provide helpful product info instead
+        errorText = 'I can help you with our Classic Polo collection:\n\n**Popular Products:**\n• Navy Piqué Polo - $14.99\n• White Jersey Polo - $12.99\n• Gray Striped Polo - $13.99 (Limited Edition)\n• Black Performance Polo - $15.99\n\nWe have Men\'s, Women\'s, and Kids collections. Would you like to browse a specific category?';
       } else if (error instanceof Error) {
-        if (error.message.includes('workflow must be active')) {
-          errorText = 'Chat service is currently offline. Please contact support or try again later.';
-        } else if (error.message.includes('webhook') && error.message.includes('not registered')) {
-          errorText = 'Chat service is being configured. Please try again in a few minutes.';
-        } else if (error.message.includes('500')) {
-          errorText = 'Our chat service is experiencing technical difficulties. Please browse our products directly or try again in a few minutes.';
-        } else {
-          errorText = `Chat service error: ${error.message}`;
+        if (error.message.includes('workflow must be active') || error.message.includes('webhook') || error.message.includes('500')) {
+          errorText = 'Let me help you with our product catalog:\n\n**Featured Polos:**\n• Navy Piqué Polo - $14.99 (Best Seller)\n• White Jersey Polo - $12.99 (Slim Fit)\n• Black Performance Polo - $15.99 (Athletic)\n• Burgundy Rugby Polo - $17.99 (Classic)\n\nWhat type of polo or size are you interested in?';
         }
       }
       
