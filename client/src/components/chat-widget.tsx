@@ -121,14 +121,17 @@ export default function ChatWidget() {
     } catch (error) {
       console.error('Chat error:', error);
       
-      let errorText = 'I can help you with our Classic Polo products! Here are our featured items:\n\n**Men\'s Collection:**\n• Navy Piqué Polo - $14.99 (Classic Fit)\n• White Jersey Polo - $12.99 (Slim Fit)\n• Black Performance Polo - $15.99 (Athletic Fit)\n\n**Also Available:**\n• Women\'s elegant polo styles\n• Kids comfortable designs\n• Premium accessories\n\nWhat specific products or details are you looking for?';
+      let errorText = 'Chat service is currently unavailable. Please try again later or browse our products directly on the website.';
       
       if (error instanceof TypeError && error.message.includes('fetch')) {
-        // Network error - provide helpful product info instead
-        errorText = 'I can help you with our Classic Polo collection:\n\n**Popular Products:**\n• Navy Piqué Polo - $14.99\n• White Jersey Polo - $12.99\n• Gray Striped Polo - $13.99 (Limited Edition)\n• Black Performance Polo - $15.99\n\nWe have Men\'s, Women\'s, and Kids collections. Would you like to browse a specific category?';
+        errorText = 'Unable to connect to chat service. Please activate the n8n workflow and try again.';
       } else if (error instanceof Error) {
-        if (error.message.includes('workflow must be active') || error.message.includes('webhook') || error.message.includes('500')) {
-          errorText = 'Let me help you with our product catalog:\n\n**Featured Polos:**\n• Navy Piqué Polo - $14.99 (Best Seller)\n• White Jersey Polo - $12.99 (Slim Fit)\n• Black Performance Polo - $15.99 (Athletic)\n• Burgundy Rugby Polo - $17.99 (Classic)\n\nWhat type of polo or size are you interested in?';
+        if (error.message.includes('workflow must be active')) {
+          errorText = 'Chat workflow is not active. Please activate your n8n workflow to enable chat.';
+        } else if (error.message.includes('webhook') && error.message.includes('not registered')) {
+          errorText = 'Webhook not found. Please check your n8n workflow configuration.';
+        } else if (error.message.includes('500')) {
+          errorText = 'Chat service error. Please check your Google Sheets connection in n8n.';
         }
       }
       
