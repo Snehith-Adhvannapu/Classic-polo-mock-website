@@ -50,6 +50,300 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     
+    <!-- Chat Widget Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/geist-font/1.0.0/fonts/geist-sans/style.min.css">
+    <style>
+        /* Chat Widget Styling */
+        #chat-widget-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+            font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        }
+        #chat-widget-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+        }
+        #chat-widget-header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        #chat-widget-header button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        #chat-widget-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+        #chat-widget-body p {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            word-wrap: break-word;
+            line-height: 1.4;
+            max-width: 85%;
+        }
+        #chat-widget-body p:last-child {
+            margin-bottom: 0;
+        }
+        .user-message {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            margin-left: auto !important;
+            border-bottom-right-radius: 4px !important;
+        }
+        .bot-message {
+            background: white !important;
+            color: #2d3748 !important;
+            border: 1px solid #e2e8f0;
+            border-bottom-left-radius: 4px !important;
+        }
+        #chat-widget-footer {
+            padding: 16px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+            display: flex;
+            gap: 12px;
+        }
+        #chat-widget-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            outline: none;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        #chat-widget-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        #chat-widget-send {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        #chat-widget-send:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        #chat-widget-send:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        #chat-widget-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        #chat-widget-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+        }
+        /* Scrollbar styling */
+        #chat-widget-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        #chat-widget-body::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        #chat-widget-body::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 3px;
+        }
+        #chat-widget-body::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+    </style>
+
+    <!-- Chat Widget Button -->
+    <button id="chat-widget-button">💬</button>
+
+    <!-- Chat Widget -->
+    <div id="chat-widget-container">
+        <div id="chat-widget-header">
+            <span>Customer Support</span>
+            <button onclick="closeChatWidget()">✕</button>
+        </div>
+        <div id="chat-widget-body">
+            <p class="bot-message"><strong>Hi 👋, I can help you find polo shirts and other products from our catalog!</strong></p>
+        </div>
+        <div id="chat-widget-footer">
+            <input type="text" id="chat-widget-input" placeholder="Ask about our polo shirts...">
+            <button id="chat-widget-send">Send</button>
+        </div>
+    </div>
+
+    <!-- Chat Widget Script -->
+    <script>
+        // Function to generate or retrieve a unique chat ID
+        function getChatId() {
+            let chatId = sessionStorage.getItem("chatId");
+            if (!chatId) {
+                chatId = "chat_" + Math.random().toString(36).substr(2, 9);
+                sessionStorage.setItem("chatId", chatId);
+            }
+            return chatId;
+        }
+
+        // Show chat widget and hide bubble
+        document.getElementById("chat-widget-button").addEventListener("click", function() {
+            document.getElementById("chat-widget-container").style.display = "flex";
+            document.getElementById("chat-widget-button").style.display = "none";
+        });
+
+        // Close chat widget and show bubble
+        function closeChatWidget() {
+            document.getElementById("chat-widget-container").style.display = "none";
+            document.getElementById("chat-widget-button").style.display = "flex";
+        }
+
+        // Handle Enter key in input
+        document.getElementById("chat-widget-input").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        });
+
+        // Send message function
+        function sendMessage() {
+            let message = document.getElementById("chat-widget-input").value;
+            if (message.trim() === "") return;
+
+            let chatBody = document.getElementById("chat-widget-body");
+            let sendButton = document.getElementById("chat-widget-send");
+            
+            // Add user message
+            let userMessage = document.createElement("p");
+            userMessage.textContent = message;
+            userMessage.className = "user-message";
+            chatBody.appendChild(userMessage);
+
+            // Scroll to bottom
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            // Disable send button and show loading
+            sendButton.disabled = true;
+            sendButton.textContent = "...";
+
+            let chatId = getChatId();
+
+            fetch("https://havocsnehith.app.n8n.cloud/webhook/chatbot", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chatId: chatId,
+                    message: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('n8n response:', data);
+                
+                let botResponseText = "Sorry, I couldn't process your request.";
+                
+                // Handle the malformed response structure from n8n workflow
+                if (data && typeof data === 'object') {
+                    const keys = Object.keys(data);
+                    for (const key of keys) {
+                        if (data[key] && typeof data[key] === 'object' && data[key].output) {
+                            botResponseText = data[key].output;
+                            break;
+                        }
+                    }
+                    
+                    // Standard response formats
+                    if (botResponseText === "Sorry, I couldn't process your request.") {
+                        if (data.message && data.message !== 'Workflow was started') {
+                            botResponseText = data.message;
+                        } else if (data.output) {
+                            botResponseText = data.output;
+                        } else if (data.reply) {
+                            botResponseText = data.reply;
+                        }
+                    }
+                }
+
+                let botMessage = document.createElement("p");
+                botMessage.innerHTML = botResponseText;
+                botMessage.className = "bot-message";
+                chatBody.appendChild(botMessage);
+                
+                // Scroll to bottom
+                chatBody.scrollTop = chatBody.scrollHeight;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                let errorMessage = document.createElement("p");
+                errorMessage.textContent = "Sorry, I'm having trouble connecting. Please try again.";
+                errorMessage.className = "bot-message";
+                chatBody.appendChild(errorMessage);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            })
+            .finally(() => {
+                // Re-enable send button
+                sendButton.disabled = false;
+                sendButton.textContent = "Send";
+            });
+
+            document.getElementById("chat-widget-input").value = "";
+        }
+
+        // Send message event listener
+        document.getElementById("chat-widget-send").addEventListener("click", sendMessage);
+    </script>
 
     <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
     <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
