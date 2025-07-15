@@ -8,7 +8,7 @@ import Home from "@/pages/home";
 import Products from "@/pages/products";
 import ProductDetail from "@/pages/product-detail";
 import AllProducts from "@/pages/all-products";
-import ChatWidget from "@/components/chat-widget";
+
 
 // Create a new QueryClient instance
 const queryClient = new QueryClient({
@@ -58,7 +58,6 @@ function AppContent() {
       <CartContext.Provider value={cartProvider}>
         <Toaster />
         <Router />
-        <ChatWidget />
       </CartContext.Provider>
     </TooltipProvider>
   );

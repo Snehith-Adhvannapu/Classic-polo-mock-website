@@ -4,12 +4,12 @@
 
 This is a full-stack e-commerce application for "Classic Polo" - a clothing store specializing in timeless polo shirts and curated outfits. The application is built with a modern tech stack using React for the frontend, Express.js for the backend, and PostgreSQL with Drizzle ORM for data management.
 
-**Recent Updates (July 14, 2025):**
+**Recent Updates (July 15, 2025):**
 - Successfully migrated from Replit Agent to standard Replit environment
-- Updated chat widget to production webhook API at `https://havocsnehith.app.n8n.cloud/webhook/chatbot`
-- Enhanced error handling and debugging for chat functionality
-- Chat widget now displays actual product data from the catalog when webhook fails
-- Configured chat to handle various n8n response formats including Google Sheets integration
+- Replaced custom chat widget with official n8n embedded chat widget
+- Integrated n8n chat directly using webhook URL: `https://havocsnehith.app.n8n.cloud/webhook/chatbot`
+- Chat now uses real-time Google Sheets data via n8n workflow
+- Removed all fallback messages to ensure only authentic data from n8n workflow is displayed
 
 **Key Features:**
 - **Scrape-Friendly Design**: Complete SEO optimization with structured data, meta tags, and schema markup
