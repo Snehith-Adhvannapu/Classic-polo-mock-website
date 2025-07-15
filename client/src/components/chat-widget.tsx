@@ -91,23 +91,26 @@ export default function ChatWidget() {
       const data = await response.json();
       console.log('Response data:', data);
       
-      let botResponseText = 'Sorry, I did not understand that.';
+      let botResponseText = 'No response received from chat service.';
       
-      // Handle different response formats
+      // Handle the malformed n8n response structure
       if (data.reply) {
         botResponseText = data.reply;
       } else if (data.response) {
         botResponseText = data.response;
-      } else if (data.output && data.output !== '=') {
+      } else if (data.output) {
         botResponseText = data.output;
-      } else if (data.output === '=') {
-        // Handle the case where n8n returns just "=" - provide actual product info
-        botResponseText = 'I\'m having trouble accessing the full database, but I can tell you about our current products:\n\n**Men\'s Polos:**\n• Navy Piqué Polo - $14.99 (Classic Fit)\n• White Jersey Polo - $12.99 (Slim Fit)\n• Black Performance Polo - $15.99 (Athletic Fit)\n• Gray Striped Polo - $13.99 (Limited Edition)\n\n**Women\'s Collection:** Elegant styles available\n**Kids Collection:** Comfortable designs for children\n\nWould you like to browse specific categories or see more details about any polo?';
-      } else if (data.message && data.message !== 'Workflow was started') {
+      } else if (data.message) {
         botResponseText = data.message;
-      } else if (data.message === 'Workflow was started') {
-        // Handle the specific case where n8n returns this message
-        botResponseText = 'I received your message! Let me help you with our Classic Polo collection:\n\n**Featured Products:**\n• Navy Piqué Polo - $14.99\n• White Jersey Polo - $12.99\n• Black Performance Polo - $15.99\n\nWe have Men\'s, Women\'s, and Kids collections available. What type of polo or specific details are you looking for?';
+      } else {
+        // Handle the nested structure: {"{\"reply\": \"your response text here\"}": {"output": "actual response"}}
+        const keys = Object.keys(data);
+        for (const key of keys) {
+          if (data[key] && typeof data[key] === 'object' && data[key].output) {
+            botResponseText = data[key].output;
+            break;
+          }
+        }
       }
       
       const botMessage: Message = {
@@ -121,13 +124,13 @@ export default function ChatWidget() {
     } catch (error) {
       console.error('Chat error:', error);
       
-      let errorText = 'Chat service is currently unavailable. Please try again later or browse our products directly on the website.';
+      let errorText = 'Chat service is currently unavailable. Please try again later.';
       
       if (error instanceof TypeError && error.message.includes('fetch')) {
-        errorText = 'Unable to connect to chat service. Please activate the n8n workflow and try again.';
+        errorText = 'Unable to connect to chat service. Please check your n8n workflow.';
       } else if (error instanceof Error) {
         if (error.message.includes('workflow must be active')) {
-          errorText = 'Chat workflow is not active. Please activate your n8n workflow to enable chat.';
+          errorText = 'Chat workflow is not active. Please activate your n8n workflow.';
         } else if (error.message.includes('webhook') && error.message.includes('not registered')) {
           errorText = 'Webhook not found. Please check your n8n workflow configuration.';
         } else if (error.message.includes('500')) {
