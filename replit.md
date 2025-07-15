@@ -6,8 +6,10 @@ This is a full-stack e-commerce application for "Classic Polo" - a clothing stor
 
 **Recent Updates (July 14, 2025):**
 - Successfully migrated from Replit Agent to standard Replit environment
-- Updated chat widget to connect to custom webhook API at `https://havocsnehith.app.n8n.cloud/webhook/chatbot`
+- Updated chat widget to production webhook API at `https://havocsnehith.app.n8n.cloud/webhook/chatbot`
 - Enhanced error handling and debugging for chat functionality
+- Chat widget now displays actual product data from the catalog when webhook fails
+- Configured chat to handle various n8n response formats including Google Sheets integration
 
 **Key Features:**
 - **Scrape-Friendly Design**: Complete SEO optimization with structured data, meta tags, and schema markup
